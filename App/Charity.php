@@ -11,7 +11,6 @@ class Charity
     private $charitiesData = [];
     private $charitiesId;
 
-    // public function __construct($id, $name, $email)
     public function __construct($name)
     {
         $this->charityFile = __DIR__ . "/../data/$name.json";
@@ -62,6 +61,7 @@ class Charity
     }
 
     public function edit(){
+        $this->showAll();
         echo "Select whitch charyti edit: ";
         $id = trim(fgets(STDIN));
 
@@ -82,7 +82,7 @@ class Charity
 
     public function delete(){
         $this->showAll();
-        
+
         echo "Select whitch charyti delete: ";
         $id = trim(fgets(STDIN));
 

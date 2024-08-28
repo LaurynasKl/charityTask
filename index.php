@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/App/Charity.php';
-// require __DIR__ . '/App/Donation.php';
+require __DIR__ . '/App/Donation.php';
 
 echo "
 Press 1 to View charities, 
@@ -14,12 +14,15 @@ Select: ";
 
 // $charity = new Charity($id, $name, $email);
 $charity = new Charity('charity');
+$donation = new Donation('donation');
+
 
 $veiksmas = trim(fgets(STDIN));
+
 if ($veiksmas == 1) {
     $charity->showAll();
-
 }
+
 if ($veiksmas == 2) {
     $charity->add();
 }
@@ -30,4 +33,9 @@ if ($veiksmas == 3) {
 
 if ($veiksmas == 4) { 
     $charity->delete();
+}
+if ($veiksmas == 5) { 
+    $donation->addDonation();
+    // $donation->showAll();
+
 }
