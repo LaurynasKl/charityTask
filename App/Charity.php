@@ -40,7 +40,8 @@ class Charity
             foreach ($this->charitiesData as $charity) {
                 echo "id: $charity->id \n";
                 echo "name: $charity->name \n";
-                echo "email: $charity->email \n\n";
+                echo "email: $charity->email \n";
+                echo "amount: $charity->amount \n\n";
             }
         } else {
             echo 'No charity';
@@ -56,6 +57,7 @@ class Charity
         $charity['name'] = trim(fgets(STDIN));
         echo 'Charity representative email: ';
         $charity['email'] = trim(fgets(STDIN));
+        $charity['amount'] = 0;
         echo 'Charity added';
         $this->charitiesData[] = $charity;
     }
@@ -72,7 +74,7 @@ class Charity
                 $editCharity['name'] = trim(fgets(STDIN));
                 echo 'New charity representative email: ';
                 $editCharity['email'] = trim(fgets(STDIN));
-                $editCharity['id'] = $id;
+                $editCharity['id'] = (int)$id;
 
                 $this->charitiesData[$key] = $editCharity;
             }
@@ -96,6 +98,7 @@ class Charity
             }
         }
     }
+
 
 
 }

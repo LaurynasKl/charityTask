@@ -35,7 +35,6 @@ if ($veiksmas == 4) {
     $charity->delete();
 }
 if ($veiksmas == 5) { 
-    $donation->addDonation();
-    // $donation->showAll();
-
+    // $donation->addDonation('charity');
+    // $donation->donated('charity');
 }

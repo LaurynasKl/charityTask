@@ -13,6 +13,7 @@ class Donation
     private $donorId;
     private $donorFile;
 
+    
     public function __construct($name) {
         
         $this->donorFile = __DIR__ . "/../data/$name.json";
@@ -36,31 +37,33 @@ class Donation
         $donation = [];
         $donation['id'] = $this->id;
         $this->id++;
-        echo 'Donor name: ';
-        $donation['name'] = trim(fgets(STDIN));
+        // echo 'Donor name: ';
+        // $donation['name'] = trim(fgets(STDIN));
 
-        echo "Amount: ";
-        $donation['amount'] = trim(fgets(STDIN));
+        // echo "Amount: ";
+        // $donation['amount'] = (int)trim(fgets(STDIN));
 
         echo "\n";
-        $this->showAll();
-        echo 'Select charity: ';
-        $donation['charityId'] = trim(fgets(STDIN));
+        $this->showAll('charity');
+        echo 'Select charity number: ';
+        $donation['charityId'] = (int)trim(fgets(STDIN));
+        
+        $this->donated('charity');
 
         $donation['time'] = date('d');
         $this->donorData[] = $donation;
-
+        
     }
-
-
-    public function showAll(){
-        $charityFile = __DIR__ . "/../data/charity.json";
+    
+    
+    public function showAll($name){
+        $charityFile = __DIR__ . "/../data/$name.json";
         if (file_exists($charityFile)) {
             $allCharities = json_decode(file_get_contents($charityFile));
         }
         if (!empty($allCharities)) {
             foreach ($allCharities as $value) {
-                echo "id: $value->id \n";
+                echo "Number: $value->id \n";
                 echo "name: $value->name \n";
                 echo "email: $value->email \n\n";
             }
@@ -71,9 +74,23 @@ class Donation
     }
 
 
-    public function donated() {
-        
+    public function donated($name) {
+        $charityFile = __DIR__ . "/../data/$name.json";
+        $donorArray = $this->donorData[0];
+        // var_dump($donorArray->id);
+
+        if (file_exists($charityFile)) {
+            $allCharities = json_decode(file_get_contents($charityFile));
+        }
+        foreach ($allCharities as $key => $charity) {
+            if ($charity->id == $donorArray->charityId) {
+                
+                $charity->amount += $donorArray->amount;
+            }
+        }
+        file_put_contents($charityFile, json_encode($allCharities));
     }
+
 
 
 }
