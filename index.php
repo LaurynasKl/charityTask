@@ -13,10 +13,8 @@ Press 6 to See all donations
 Select: ";
 
 
-// $charity = new Charity($id, $name, $email);
 $charity = new Charity('charity');
 $donation = new Donation('charity', 'donation');
-
 
 $veiksmas = trim(fgets(STDIN));
 
@@ -28,16 +26,18 @@ if ($veiksmas == 2) {
     $charity->add();
 }
 
-if ($veiksmas == 3) { 
+if ($veiksmas == 3) {
     $charity->edit();
 }
 
-if ($veiksmas == 4) { 
+if ($veiksmas == 4) {
     $charity->delete();
 }
-if ($veiksmas == 5) { 
+
+if ($veiksmas == 5) {
     $donation->addDonation();
 }
-if ($veiksmas == 6) { 
+
+if ($veiksmas == 6) {
     $donation->allDonations('charity');
 }

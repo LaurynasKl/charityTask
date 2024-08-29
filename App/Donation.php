@@ -16,9 +16,7 @@ class Donation
     private $donorFile;
     public $charityFile;
 
-
-
-    public function __construct($charityName, $donationName)
+    public function __construct($donationName)
     {
 
         $this->donorFile = __DIR__ . "/../data/$donationName.json";
@@ -46,9 +44,11 @@ class Donation
 
         echo 'Donor name: ';
         $donation['name'] = trim(fgets(STDIN));
+        $this->nameValidation($donation);
 
         echo "Amount: ";
-        $donation['amount'] = (int)trim(fgets(STDIN));
+        $donation['amount'] = (float)trim(fgets(STDIN));
+        $this->amountValidation($donation);
 
         echo "\nAll charities\n";
         $this->showAll('charity');
@@ -69,10 +69,10 @@ class Donation
             foreach ($allCharities as $value) {
                 echo "Number: $value->id \n";
                 echo "name: $value->name \n";
-                echo "email: $value->email \n\n";
+                echo "email: $value->email \n";
             }
         } else {
-            echo 'nepavyko';
+            echo 'No charity';
         }
     }
 
@@ -88,6 +88,27 @@ class Donation
             foreach ($this->donorData as $donor) {
                 echo "\n$donor->name donate $donor->amount eur to $charity->name at $donor->time\n";
             }
+        }
+    }
+
+
+
+    public function nameValidation($donation)
+    {
+        if (strlen($donation['name']) <= 3) {
+            echo 'Name is to short';
+            exit;
+        } else if (strlen($donation['name']) >= 20) {
+            echo 'Name is to long';
+            exit;
+        }
+    }
+
+    public function amountValidation($donation)
+    {
+        if ($donation['amount'] <= 0) {
+            echo 'Amount is too low';
+            exit;
         }
     }
 }

@@ -7,29 +7,25 @@ class Charity
     public $email;
 
     private $charityFile;
-    private $charityId;
+    // private $id;
     private $charitiesData = [];
     private $charitiesId;
 
     public function __construct($name)
     {
         $this->charityFile = __DIR__ . "/../data/$name.json";
-        $this->charityId = __DIR__ . "/../data/$name-id.json";
+        $this->id = __DIR__ . "/../data/$name-id.json";
         if (!file_exists($this->charityFile)) {
             file_put_contents($this->charityFile, json_encode([]));
-            file_put_contents($this->charityId, json_encode(1));
+            file_put_contents($this->id, json_encode(1));
         }
         $this->charitiesData = json_decode(file_get_contents($this->charityFile));
-        $this->charitiesId = json_decode(file_get_contents($this->charityId));
-
-        //     $this->id = $id;
-        //     $this->name = $name;
-        //     $this->email = $email;
+        $this->charitiesId = json_decode(file_get_contents($this->id));
     }
     public function __destruct()
     {
         file_put_contents($this->charityFile, json_encode($this->charitiesData));
-        file_put_contents($this->charityId, json_encode($this->charitiesId));
+        file_put_contents($this->id, json_encode($this->charitiesId));
     }
 
 
@@ -41,7 +37,6 @@ class Charity
                 echo "id: $charity->id \n";
                 echo "name: $charity->name \n";
                 echo "email: $charity->email \n";
-                // echo "amount: $charity->amount \n\n";
             }
         } else {
             echo 'No charity';
@@ -51,15 +46,20 @@ class Charity
     public function add()
     {
         $charity = [];
+
         $charity['id'] = $this->charitiesId;
         $this->charitiesId++;
+
         echo 'Charity name: ';
         $charity['name'] = trim(fgets(STDIN));
+        $this->nameValidation($charity);
+
         echo 'Charity representative email: ';
-        $charity['email'] = trim(fgets(STDIN));
-        // $charity['amount'] = 0;
-        echo 'Charity added';
+        $charity['email'] = fgets(STDIN);
+        $this->emailValidation($charity);
+
         $this->charitiesData[] = $charity;
+        echo 'Charity added';
     }
 
     public function edit()
@@ -71,15 +71,18 @@ class Charity
         foreach ($this->charitiesData as $key => $charity) {
             if ($charity->id == $id) {
                 $editCharity = [];
-                echo 'New charity name: ';
-                $editCharity['name'] = trim(fgets(STDIN));
-                echo 'New charity representative email: ';
-                $editCharity['email'] = trim(fgets(STDIN));
-                // $editCharity['amount'] = $charity->amount;
-
                 $editCharity['id'] = (int)$id;
 
+                echo 'New charity name: ';
+                $editCharity['name'] = trim(fgets(STDIN));
+                $this->nameValidation($editCharity);
+
+                echo 'New charity representative email: ';
+                $editCharity['email'] = trim(fgets(STDIN));
+                $this->emailValidation($editCharity);
+
                 $this->charitiesData[$key] = $editCharity;
+                echo 'Charity edited';
             }
         }
     }
@@ -87,10 +90,8 @@ class Charity
     public function delete()
     {
         $this->showAll();
-
         echo "Select whitch charyti delete: ";
         $id = trim(fgets(STDIN));
-
 
         foreach ($this->charitiesData as $key => $charity) {
             if ($charity->id == $id) {
@@ -98,6 +99,28 @@ class Charity
                 $this->charitiesData = array_values($this->charitiesData);
                 echo 'Charity deleted';
             }
+        }
+    }
+
+
+    public function nameValidation($charity)
+    {
+        if (strlen($charity['name']) <= 3) {
+            echo 'Name is to short';
+            exit;
+        } else if (strlen($charity['name']) >= 20) {
+            echo 'Name is to long';
+            exit;
+        }
+    }
+
+
+    // ???????????????
+    public function emailValidation($charity)
+    {
+        if (filter_var($charity['email'], FILTER_VALIDATE_EMAIL)) {
+            echo 'Invalid email address';
+            exit;
         }
     }
 }
