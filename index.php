@@ -9,12 +9,13 @@ Press 2 to Add charity,
 Press 3 to Edit charity, 
 Press 4 to Delete charity
 Press 5 to Donate to charity
+Press 6 to See all donations
 Select: ";
 
 
 // $charity = new Charity($id, $name, $email);
 $charity = new Charity('charity');
-$donation = new Donation('donation');
+$donation = new Donation('charity', 'donation');
 
 
 $veiksmas = trim(fgets(STDIN));
@@ -35,6 +36,8 @@ if ($veiksmas == 4) {
     $charity->delete();
 }
 if ($veiksmas == 5) { 
-    // $donation->addDonation('charity');
-    // $donation->donated('charity');
+    $donation->addDonation();
+}
+if ($veiksmas == 6) { 
+    $donation->allDonations('charity');
 }

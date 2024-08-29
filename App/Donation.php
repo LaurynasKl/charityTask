@@ -10,21 +10,26 @@ class Donation
     public $dateTime;
 
     private $donorData = [];
+    public $charitiesData = [];
+
     private $donorId;
     private $donorFile;
+    public $charityFile;
 
-    
-    public function __construct($name) {
-        
-        $this->donorFile = __DIR__ . "/../data/$name.json";
-        $this->donorId = __DIR__ . "/../data/$name-id.json";
+
+
+    public function __construct($charityName, $donationName)
+    {
+
+        $this->donorFile = __DIR__ . "/../data/$donationName.json";
+        $this->donorId = __DIR__ . "/../data/$donationName-id.json";
         if (!file_exists($this->donorFile)) {
             file_put_contents($this->donorFile, json_encode([]));
             file_put_contents($this->donorId, json_encode(1));
         }
+
         $this->donorData = json_decode(file_get_contents($this->donorFile));
         $this->id = json_decode(file_get_contents($this->donorId));
-
     }
 
     public function __destruct()
@@ -33,30 +38,29 @@ class Donation
         file_put_contents($this->donorId, json_encode($this->id));
     }
 
-    public function addDonation() {
+    public function addDonation()
+    {
         $donation = [];
         $donation['id'] = $this->id;
         $this->id++;
-        // echo 'Donor name: ';
-        // $donation['name'] = trim(fgets(STDIN));
 
-        // echo "Amount: ";
-        // $donation['amount'] = (int)trim(fgets(STDIN));
+        echo 'Donor name: ';
+        $donation['name'] = trim(fgets(STDIN));
 
-        echo "\n";
+        echo "Amount: ";
+        $donation['amount'] = (int)trim(fgets(STDIN));
+
+        echo "\nAll charities\n";
         $this->showAll('charity');
         echo 'Select charity number: ';
         $donation['charityId'] = (int)trim(fgets(STDIN));
-        
-        $this->donated('charity');
 
-        $donation['time'] = date('d');
+        $donation['time'] = date("Y-m-d G:i");
         $this->donorData[] = $donation;
-        
     }
-    
-    
-    public function showAll($name){
+
+    public function showAll($name)
+    {
         $charityFile = __DIR__ . "/../data/$name.json";
         if (file_exists($charityFile)) {
             $allCharities = json_decode(file_get_contents($charityFile));
@@ -67,30 +71,23 @@ class Donation
                 echo "name: $value->name \n";
                 echo "email: $value->email \n\n";
             }
-        }
-        else {
+        } else {
             echo 'nepavyko';
         }
     }
 
-
-    public function donated($name) {
+    public function allDonations($name)
+    {
         $charityFile = __DIR__ . "/../data/$name.json";
-        $donorArray = $this->donorData[0];
-        // var_dump($donorArray->id);
-
         if (file_exists($charityFile)) {
             $allCharities = json_decode(file_get_contents($charityFile));
         }
-        foreach ($allCharities as $key => $charity) {
-            if ($charity->id == $donorArray->charityId) {
-                
-                $charity->amount += $donorArray->amount;
+        if (!empty($allCharities)) {
+            foreach ($allCharities as $charity) {
+            }
+            foreach ($this->donorData as $donor) {
+                echo "\n$donor->name donate $donor->amount eur to $charity->name at $donor->time\n";
             }
         }
-        file_put_contents($charityFile, json_encode($allCharities));
     }
-
-
-
 }

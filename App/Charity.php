@@ -41,7 +41,7 @@ class Charity
                 echo "id: $charity->id \n";
                 echo "name: $charity->name \n";
                 echo "email: $charity->email \n";
-                echo "amount: $charity->amount \n\n";
+                // echo "amount: $charity->amount \n\n";
             }
         } else {
             echo 'No charity';
@@ -57,48 +57,47 @@ class Charity
         $charity['name'] = trim(fgets(STDIN));
         echo 'Charity representative email: ';
         $charity['email'] = trim(fgets(STDIN));
-        $charity['amount'] = 0;
+        // $charity['amount'] = 0;
         echo 'Charity added';
         $this->charitiesData[] = $charity;
     }
 
-    public function edit(){
+    public function edit()
+    {
         $this->showAll();
         echo "Select whitch charyti edit: ";
         $id = trim(fgets(STDIN));
 
         foreach ($this->charitiesData as $key => $charity) {
-            if ($charity->id == $id) {  
+            if ($charity->id == $id) {
                 $editCharity = [];
                 echo 'New charity name: ';
                 $editCharity['name'] = trim(fgets(STDIN));
                 echo 'New charity representative email: ';
                 $editCharity['email'] = trim(fgets(STDIN));
+                // $editCharity['amount'] = $charity->amount;
+
                 $editCharity['id'] = (int)$id;
 
                 $this->charitiesData[$key] = $editCharity;
             }
         }
-
     }
 
-    public function delete(){
+    public function delete()
+    {
         $this->showAll();
 
         echo "Select whitch charyti delete: ";
         $id = trim(fgets(STDIN));
 
-        
+
         foreach ($this->charitiesData as $key => $charity) {
-            if ($charity->id == $id) {  
+            if ($charity->id == $id) {
                 unset($this->charitiesData[$key]);
                 $this->charitiesData = array_values($this->charitiesData);
                 echo 'Charity deleted';
-                
             }
         }
     }
-
-
-
 }
