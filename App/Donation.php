@@ -38,6 +38,7 @@ class Donation
 
     public function addDonation()
     {
+
         $donation = [];
         $donation['id'] = $this->id;
         $this->id++;
@@ -46,21 +47,23 @@ class Donation
         $donation['name'] = trim(fgets(STDIN));
         $this->nameValidation($donation);
 
-        echo "Amount: ";
-        $donation['amount'] = (float)trim(fgets(STDIN));
-        $this->amountValidation($donation);
-
+        
         echo "\nAll charities\n";
         $this->showAll('charity');
         echo 'Select charity number: ';
         $donation['charityId'] = (int)trim(fgets(STDIN));
 
+        echo "Amount: ";
+        $donation['amount'] = (float)trim(fgets(STDIN));
+        $this->amountValidation($donation);
+        
         $donation['time'] = date("Y-m-d G:i");
         $this->donorData[] = $donation;
     }
 
     public function showAll($name)
     {
+
         $charityFile = __DIR__ . "/../data/$name.json";
         if (file_exists($charityFile)) {
             $allCharities = json_decode(file_get_contents($charityFile));
@@ -73,21 +76,26 @@ class Donation
             }
         } else {
             echo 'No charity';
+            exit;
         }
     }
 
     public function allDonations($name)
     {
         $charityFile = __DIR__ . "/../data/$name.json";
-        if (file_exists($charityFile)) {
-            $allCharities = json_decode(file_get_contents($charityFile));
-        }
-        if (!empty($allCharities)) {
-            foreach ($allCharities as $charity) {
+        if ($this->donorData !== []) {
+            if (file_exists($charityFile)) {
+                $allCharities = json_decode(file_get_contents($charityFile));
             }
-            foreach ($this->donorData as $donor) {
-                echo "\n$donor->name donate $donor->amount eur to $charity->name at $donor->time\n";
+            if (!empty($allCharities)) {
+                foreach ($allCharities as $charity) {
+                }
+                foreach ($this->donorData as $donor) {
+                    echo "\n$donor->name donate $donor->amount eur to $charity->name at $donor->time\n";
+                }
             }
+        } else {
+            echo 'No on donated';
         }
     }
 
@@ -95,6 +103,18 @@ class Donation
 
     public function nameValidation($donation)
     {
+        $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $searchName = $donation['name'];
+        foreach ($this->charitiesData as $key => $value) {
+            if ($value->name == $searchName) {
+                echo 'This name is used';
+                exit;
+            }
+        }
+        if (strtoupper($searchName[0]) !== $searchName[0]) {
+            echo 'The first letter must be uppercase.';
+            exit;
+        }
         if (strlen($donation['name']) <= 3) {
             echo 'Name is to short';
             exit;

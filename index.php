@@ -14,7 +14,7 @@ Select: ";
 
 
 $charity = new Charity('charity');
-$donation = new Donation('charity', 'donation');
+$donation = new Donation('donation');
 
 $veiksmas = trim(fgets(STDIN));
 

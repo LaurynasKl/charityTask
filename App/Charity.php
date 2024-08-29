@@ -55,7 +55,7 @@ class Charity
         $this->nameValidation($charity);
 
         echo 'Charity representative email: ';
-        $charity['email'] = fgets(STDIN);
+        $charity['email'] = trim(fgets(STDIN));
         $this->emailValidation($charity);
 
         $this->charitiesData[] = $charity;
@@ -105,6 +105,18 @@ class Charity
 
     public function nameValidation($charity)
     {
+        $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $searchName = $charity['name'];
+        foreach ($this->charitiesData as $key => $value) {
+            if ($value->name == $searchName) {
+                echo 'This name is used';
+                exit;
+            }
+        }
+        if (strtoupper($searchName[0]) !== $searchName[0]) {
+            echo 'The first letter must be uppercase.';
+            exit;
+        }
         if (strlen($charity['name']) <= 3) {
             echo 'Name is to short';
             exit;
@@ -115,10 +127,17 @@ class Charity
     }
 
 
-    // ???????????????
     public function emailValidation($charity)
     {
-        if (filter_var($charity['email'], FILTER_VALIDATE_EMAIL)) {
+        $searchEmail = $charity['email'];
+        foreach ($this->charitiesData as $key => $value) {
+            if ($value->email == $searchEmail) {
+                echo 'This email is used';
+                exit;
+            }
+       
+        }
+        if (!filter_var($charity['email'], FILTER_VALIDATE_EMAIL)) {
             echo 'Invalid email address';
             exit;
         }
